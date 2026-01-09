@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Exply helps you understand any text on the web instantly with AI-powered inline explanations. Understand complex content, simplify text, and translate with context.">
+    <meta name="keywords" content="browser extension, text explanation, AI explanation, reading assistant, text simplification, translation">
+    <title>Exply - Understand any text, instantly.</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- SVG Icons Sprite -->
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </symbol>
+        <symbol id="icon-highlight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <path d="M8 9h8M8 13h6"/>
+        </symbol>
+        <symbol id="icon-click" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 11l3 3L22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+        </symbol>
+        <symbol id="icon-read" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+        </symbol>
+        <symbol id="icon-inline" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="9" y1="9" x2="15" y2="9"/>
+            <line x1="9" y1="15" x2="15" y2="15"/>
+        </symbol>
+        <symbol id="icon-user-initiated" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+            <circle cx="18" cy="9" r="1"/>
+            <path d="M16 9h4"/>
+        </symbol>
+        <symbol id="icon-understanding" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </symbol>
+        <symbol id="icon-student" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            <path d="M8 7h8M8 11h8M8 15h4"/>
+        </symbol>
+        <symbol id="icon-developer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"/>
+            <polyline points="8 6 2 12 8 18"/>
+        </symbol>
+        <symbol id="icon-professional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+        </symbol>
+        <symbol id="icon-anyone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+            <circle cx="9" cy="7" r="4"/>
+            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            <circle cx="18" cy="20" r="1"/>
+        </symbol>
+        <symbol id="icon-select-only" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6L9 17l-5-5"/>
+        </symbol>
+        <symbol id="icon-no-scraping" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+            <line x1="9" y1="3" x2="9" y2="21"/>
+            <line x1="3" y1="9" x2="21" y2="9"/>
+            <circle cx="7" cy="7" r="1"/>
+        </symbol>
+        <symbol id="icon-no-tracking" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="2" x2="12" y2="6"/>
+            <line x1="12" y1="18" x2="12" y2="22"/>
+            <line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/>
+            <line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/>
+            <line x1="2" y1="12" x2="6" y2="12"/>
+            <line x1="18" y1="12" x2="22" y2="12"/>
+            <line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/>
+            <line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/>
+        </symbol>
+        <symbol id="icon-no-data" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18"/>
+            <path d="M6 6l12 12"/>
+        </symbol>
+    </svg>
+    
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">
+                <img src="images/logo/exply-logo.png" alt="Exply Logo" class="logo-image" />
+                <span class="logo-text">Exply</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">Home</a>
+                <a href="use-cases.html" class="nav-link">Use Cases</a>
+                <a href="#privacy" class="nav-link">Privacy</a>
+                <a href="#footer" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Understand any text, instantly.</h1>
+                    <p class="hero-subtitle">Exply explains selected text on the web directly where you're reading.</p>
+                    <a href="coming-soon.html" class="cta-button primary">Install Chrome Extension</a>
+                    <p class="hero-note">Free • Privacy-focused • No sign-up required</p>
+                </div>
+                <div class="hero-image">
+                    <img src="images/hero/exply-hero-demo.png" alt="Exply extension showing an inline explanation popup on a webpage" class="hero-screenshot" />
+                    <!-- Fallback SVG illustration if image not available -->
+                    <svg class="hero-illustration" viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: none;">
+                        <rect x="10" y="10" width="180" height="130" rx="8" fill="#1f2937" stroke="#374151" stroke-width="2"/>
+                        <line x1="30" y1="40" x2="170" y2="40" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="30" y1="65" x2="150" y2="65" stroke="#6b7280" stroke-width="2" stroke-linecap="round"/>
+                        <rect x="30" y="85" width="120" height="8" rx="4" fill="#60a5fa" opacity="0.4"/>
+                        <rect x="30" y="100" width="80" height="8" rx="4" fill="#60a5fa" opacity="0.4"/>
+                        <path d="M120 90 L140 100 L120 110 Z" fill="#60a5fa"/>
+                        <rect x="40" y="115" width="140" height="20" rx="4" fill="#064e3b" stroke="#10b981" stroke-width="1"/>
+                        <path d="M50 125 L60 132 L80 120" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                        <line x1="90" y1="128" x2="170" y2="128" stroke="#10b981" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How it works</h2>
+            <div class="steps">
+                <div class="step step-reverse">
+                    <div class="step-image-wrapper">
+                        <img src="images/how-it-works/step-1-highlight.png" alt="Highlighting text on a webpage" class="step-image" />
+                    </div>
+                    <div class="step-content">
+                        <div class="step-icon-wrapper">
+                            <svg class="step-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <use href="#icon-highlight"/>
+                            </svg>
+                            <div class="step-number">1</div>
+                        </div>
+                        <h3 class="step-title">Highlight text</h3>
+                        <p class="step-description">Select any text on any webpage</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-image-wrapper">
+                        <img src="images/how-it-works/step-2-click.png" alt="Clicking Explain with Exply option" class="step-image" />
+                    </div>
+                    <div class="step-content">
+                        <div class="step-icon-wrapper">
+                            <svg class="step-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <use href="#icon-click"/>
+                            </svg>
+                            <div class="step-number">2</div>
+                        </div>
+                        <h3 class="step-title">Click "Explain with Exply"</h3>
+                        <p class="step-description">Right-click or use the extension icon</p>
+                    </div>
+                </div>
+                <div class="step step-reverse">
+                    <div class="step-image-wrapper">
+                        <img src="images/how-it-works/step-3-explanation.png" alt="Inline explanation popup from Exply" class="step-image" />
+                    </div>
+                    <div class="step-content">
+                        <div class="step-icon-wrapper">
+                            <svg class="step-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <use href="#icon-read"/>
+                            </svg>
+                            <div class="step-number">3</div>
+                        </div>
+                        <h3 class="step-title">Read the explanation</h3>
+                        <p class="step-description">Get instant, inline explanations right where you're reading</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Exply -->
+    <section class="why-exply">
+        <div class="container">
+            <h2 class="section-title">Why Exply</h2>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <use href="#icon-inline"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Inline, in-context explanations</h3>
+                    <p class="feature-description">Explanations appear directly where you're reading, so you never lose your place or context.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <use href="#icon-user-initiated"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">User-initiated only</h3>
+                    <p class="feature-description">No background analysis. Exply only processes text you explicitly select and request.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <use href="#icon-understanding"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Designed for understanding</h3>
+                    <p class="feature-description">Built to help you comprehend complex content, not to automate or replace your reading.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Who It's For -->
+    <section class="who-its-for">
+        <div class="container">
+            <h2 class="section-title">Who it's for</h2>
+            <div class="audiences">
+                <div class="audience">
+                    <svg class="audience-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <use href="#icon-student"/>
+                    </svg>
+                    Students
+                </div>
+                <div class="audience">
+                    <svg class="audience-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <use href="#icon-developer"/>
+                    </svg>
+                    Developers
+                </div>
+                <div class="audience">
+                    <svg class="audience-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <use href="#icon-professional"/>
+                    </svg>
+                    Professionals
+                </div>
+                <div class="audience">
+                    <svg class="audience-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <use href="#icon-anyone"/>
+                    </svg>
+                    Anyone reading complex content online
+                </div>
+            </div>
+            <p class="section-description">Exply helps anyone who encounters unfamiliar terms, complex concepts, or dense content while browsing the web.</p>
+        </div>
+    </section>
+
+    <!-- Privacy & Transparency -->
+    <section id="privacy" class="privacy">
+        <div class="container">
+            <h2 class="section-title">Privacy & Transparency</h2>
+            <div class="privacy-points">
+                <div class="privacy-point">
+                    <div class="privacy-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <use href="#icon-select-only"/>
+                        </svg>
+                    </div>
+                    <h3 class="privacy-title">Only user-selected text is processed</h3>
+                    <p>Exply only analyzes the text you explicitly select and request an explanation for.</p>
+                </div>
+                <div class="privacy-point">
+                    <div class="privacy-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <use href="#icon-no-scraping"/>
+                        </svg>
+                    </div>
+                    <h3 class="privacy-title">No full-page scraping</h3>
+                    <p>We never access, read, or store entire web pages. Only the text you select is processed.</p>
+                </div>
+                <div class="privacy-point">
+                    <div class="privacy-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <use href="#icon-no-tracking"/>
+                        </svg>
+                    </div>
+                    <h3 class="privacy-title">No browsing history tracking</h3>
+                    <p>We don't track which sites you visit, how long you spend on them, or any browsing patterns.</p>
+                </div>
+                <div class="privacy-point">
+                    <div class="privacy-icon">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <use href="#icon-no-data"/>
+                        </svg>
+                    </div>
+                    <h3 class="privacy-title">No personal data collection</h3>
+                    <p>We don't collect or store personal information, accounts, or identifiers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Exply</h3>
+                    <p class="footer-description">Understand any text, instantly.</p>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Links</h4>
+                    <a href="use-cases.html" class="footer-link">Use Cases</a>
+                    <a href="#privacy" class="footer-link">Privacy Policy</a>
+                    <a href="coming-soon.html" class="footer-link">Chrome Web Store</a>
+                </div>
+                <div class="footer-section">
+                    <h4 class="footer-heading">Contact</h4>
+                    <a href="mailto:sriva115@purdue.edu" class="footer-link">sriva115@purdue.edu</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="footer-disclaimer">AI-generated explanations are provided for informational purposes. Always verify important information from authoritative sources.</p>
+                <p class="footer-copyright">&copy; 2024 Exply. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
