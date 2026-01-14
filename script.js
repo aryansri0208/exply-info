@@ -43,7 +43,7 @@ document.querySelectorAll('.cta-button').forEach(button => {
     button.addEventListener('click', function(e) {
         // In a real implementation, this would track the click event
         // and redirect to the Chrome Web Store listing
-        console.log('CTA button clicked');
+        // no-op
     });
 });
 
