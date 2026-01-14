@@ -15,6 +15,8 @@ function initSupabaseClient() {
     try {
         const { createClient } = window.supabase;
         supabaseClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+        // Expose globally for extension bridge
+        window.explySupabase = supabaseClient;
         return supabaseClient;
     } catch (error) {
         console.error('Error creating Supabase client:', error);
