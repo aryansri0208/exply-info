@@ -1,6 +1,25 @@
 // Authentication functions
 let supabaseClient = null;
 
+// Broadcast Supabase access token to browser extensions/content scripts
+// so they can authenticate backend calls after the user logs in on the website.
+function broadcastSupabaseToken(token) {
+    try {
+        const hasToken = typeof token === 'string' && token.length > 0;
+        console.log('[Auth Bridge] Broadcasting Supabase token to extension - hasToken:', hasToken);
+        window.postMessage(
+            {
+                source: 'exply-web',
+                type: 'SUPABASE_TOKEN',
+                token: hasToken ? token : null
+            },
+            '*'
+        );
+    } catch (error) {
+        console.error('[Auth Bridge] Error broadcasting Supabase token:', error);
+    }
+}
+
 // Initialize Supabase client
 function initSupabaseClient() {
     if (supabaseClient) {
@@ -60,6 +79,13 @@ async function checkAuthState() {
             console.log('[Auth] User is authenticated:', session.user.email);
             currentUser = session.user;
             updateUIForAuth(true);
+            // Broadcast token for the extension once we know the user is authenticated
+            if (session.access_token) {
+                broadcastSupabaseToken(session.access_token);
+            } else {
+                // Explicitly broadcast null if there's no access token for some reason
+                broadcastSupabaseToken(null);
+            }
             return true;
         } else {
             console.log('[Auth] No active session found');
