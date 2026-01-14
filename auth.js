@@ -77,14 +77,23 @@ async function checkAuthState() {
         
         if (session) {
             console.log('[Auth] User is authenticated:', session.user.email);
+            console.log('[Auth] Session access_token available:', !!session.access_token);
             currentUser = session.user;
             updateUIForAuth(true);
             // Broadcast token for the extension once we know the user is authenticated
             if (session.access_token) {
+                console.log('[Auth] Broadcasting token from checkAuthState');
                 broadcastSupabaseToken(session.access_token);
             } else {
-                // Explicitly broadcast null if there's no access token for some reason
-                broadcastSupabaseToken(null);
+                console.warn('[Auth] Session exists but no access_token found');
+                // Try to get it from the session object directly
+                const token = session.access_token || (session.session && session.session.access_token);
+                if (token) {
+                    console.log('[Auth] Found token in nested session object');
+                    broadcastSupabaseToken(token);
+                } else {
+                    broadcastSupabaseToken(null);
+                }
             }
             return true;
         } else {
@@ -140,6 +149,12 @@ async function signIn(email, password) {
         if (error) throw error;
         currentUser = data.user;
         updateUIForAuth(true);
+        
+        // Broadcast token immediately after successful login
+        if (data.session && data.session.access_token) {
+            broadcastSupabaseToken(data.session.access_token);
+        }
+        
         return { success: true, data };
     } catch (error) {
         return { success: false, error: error.message };
@@ -212,14 +227,48 @@ async function requireAuth() {
     }
 }
 
+// Set up Supabase auth state change listener to broadcast token whenever session changes
+function setupAuthStateListener() {
+    const client = getSupabaseClient();
+    if (!client) {
+        console.warn('[Auth] Cannot setup auth state listener - no Supabase client');
+        return;
+    }
+    
+    // Listen for auth state changes (login, logout, token refresh, etc.)
+    client.auth.onAuthStateChange((event, session) => {
+        console.log('[Auth] Auth state changed:', event, session ? 'session exists' : 'no session');
+        
+        if (session && session.access_token) {
+            console.log('[Auth] Broadcasting token after auth state change');
+            broadcastSupabaseToken(session.access_token);
+            currentUser = session.user;
+            updateUIForAuth(true);
+        } else {
+            console.log('[Auth] No session - broadcasting null token');
+            broadcastSupabaseToken(null);
+            currentUser = null;
+            updateUIForAuth(false);
+        }
+    });
+    
+    console.log('[Auth] Auth state change listener set up');
+}
+
 // Initialize auth when page loads
 if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
-            setTimeout(checkAuthState, 100);
+            setTimeout(() => {
+                checkAuthState();
+                setupAuthStateListener();
+            }, 100);
         });
     } else {
-        setTimeout(checkAuthState, 100);
+        setTimeout(() => {
+            checkAuthState();
+            setupAuthStateListener();
+        }, 100);
     }
 }
 
