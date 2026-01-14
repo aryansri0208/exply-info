@@ -24,3 +24,4 @@ The logo will be displayed in:
 
 Simply save your logo file as `exply-logo.png` in this directory and it will automatically appear in the navigation.
 
+

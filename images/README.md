@@ -48,3 +48,4 @@ images/
 - Consider using WebP format with PNG fallback for better performance
 - Images should match the actual Exply extension UI from the screenshots provided
 
+
