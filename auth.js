@@ -3,13 +3,14 @@
 const SUPABASE_URL = 'https://ieewwnvdltqaloyqgugf.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_qYdV9A6hJ6MYVHsE0FrL4g_xANAiX';
 
-// Initialize Supabase client
-let supabase;
+// Initialize Supabase client (using CDN version)
+let supabaseClient;
 
 // Wait for Supabase to load, then initialize
 function initSupabase() {
     if (typeof window !== 'undefined' && window.supabase && typeof window.supabase.createClient === 'function') {
-        supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const { createClient } = window.supabase;
+        supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         return true;
     }
     return false;
@@ -24,7 +25,7 @@ async function initAuth() {
         console.error('Supabase not loaded');
         return;
     }
-    const { data: { session }, error } = await supabase.auth.getSession();
+    const { data: { session }, error } = await supabaseClient.auth.getSession();
     if (session) {
         currentUser = session.user;
         updateUIForAuth(true);
@@ -33,7 +34,7 @@ async function initAuth() {
     }
     
     // Listen for auth state changes
-    supabase.auth.onAuthStateChange((event, session) => {
+    supabaseClient.auth.onAuthStateChange((event, session) => {
         if (session) {
             currentUser = session.user;
             updateUIForAuth(true);
@@ -46,13 +47,13 @@ async function initAuth() {
 
 // Sign up with email and password
 async function signUp(email, password, fullName) {
-    if (!supabase) {
+    if (!supabaseClient) {
         if (!initSupabase()) {
             return { success: false, error: 'Supabase not initialized' };
         }
     }
     try {
-        const { data, error } = await supabase.auth.signUp({
+        const { data, error } = await supabaseClient.auth.signUp({
             email: email,
             password: password,
             options: {
@@ -71,13 +72,13 @@ async function signUp(email, password, fullName) {
 
 // Sign in with email and password
 async function signIn(email, password) {
-    if (!supabase) {
+    if (!supabaseClient) {
         if (!initSupabase()) {
             return { success: false, error: 'Supabase not initialized' };
         }
     }
     try {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
             email: email,
             password: password
         });
@@ -91,13 +92,13 @@ async function signIn(email, password) {
 
 // Sign out
 async function signOut() {
-    if (!supabase) {
+    if (!supabaseClient) {
         if (!initSupabase()) {
             return { success: false, error: 'Supabase not initialized' };
         }
     }
     try {
-        const { error } = await supabase.auth.signOut();
+        const { error } = await supabaseClient.auth.signOut();
         if (error) throw error;
         currentUser = null;
         window.location.href = 'index.html';
@@ -133,13 +134,13 @@ function updateUIForAuth(isAuthenticated) {
 
 // Redirect to login if not authenticated (for protected pages)
 async function requireAuth() {
-    if (!supabase) {
+    if (!supabaseClient) {
         if (!initSupabase()) {
             window.location.href = 'login.html';
             return false;
         }
     }
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (!session) {
         window.location.href = 'login.html?redirect=' + encodeURIComponent(window.location.pathname);
         return false;

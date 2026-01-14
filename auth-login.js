@@ -9,14 +9,14 @@ document.addEventListener('DOMContentLoaded', async function() {
     await new Promise(resolve => setTimeout(resolve, 100));
 
     // Check if user is already logged in
-    if (!supabase) {
+    if (!supabaseClient) {
         if (!initSupabase()) {
             errorMessage.textContent = 'Authentication service not available';
             errorMessage.style.display = 'block';
             return;
         }
     }
-    const { data: { session } } = await supabase.auth.getSession();
+    const { data: { session } } = await supabaseClient.auth.getSession();
     if (session) {
         const urlParams = new URLSearchParams(window.location.search);
         const redirect = urlParams.get('redirect');
