@@ -4,11 +4,16 @@ let supabaseClient = null;
 // Initialize Supabase client
 function initSupabaseClient() {
     if (supabaseClient) {
+        console.log('[Auth] Supabase client already initialized');
         return supabaseClient;
     }
     
+    console.log('[Auth] Initializing Supabase client...');
+    console.log('[Auth] window.supabase available:', typeof window.supabase !== 'undefined');
+    console.log('[Auth] SUPABASE_CONFIG:', SUPABASE_CONFIG ? 'Available' : 'Missing');
+    
     if (typeof window.supabase === 'undefined') {
-        console.error('Supabase library not loaded');
+        console.error('[Auth] Supabase library not loaded');
         return null;
     }
     
@@ -17,9 +22,10 @@ function initSupabaseClient() {
         supabaseClient = createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
         // Expose globally for extension bridge
         window.explySupabase = supabaseClient;
+        console.log('[Auth] Supabase client created and exposed as window.explySupabase');
         return supabaseClient;
     } catch (error) {
-        console.error('Error creating Supabase client:', error);
+        console.error('[Auth] Error creating Supabase client:', error);
         return null;
     }
 }
@@ -37,22 +43,32 @@ let currentUser = null;
 
 // Check authentication state
 async function checkAuthState() {
+    console.log('[Auth] Checking authentication state...');
     const client = getSupabaseClient();
-    if (!client) return false;
+    if (!client) {
+        console.warn('[Auth] No Supabase client available');
+        return false;
+    }
     
     try {
         const { data: { session }, error } = await client.auth.getSession();
+        if (error) {
+            console.error('[Auth] Error getting session:', error);
+        }
+        
         if (session) {
+            console.log('[Auth] User is authenticated:', session.user.email);
             currentUser = session.user;
             updateUIForAuth(true);
             return true;
         } else {
+            console.log('[Auth] No active session found');
             currentUser = null;
             updateUIForAuth(false);
             return false;
         }
     } catch (error) {
-        console.error('Error checking auth state:', error);
+        console.error('[Auth] Error checking auth state:', error);
         return false;
     }
 }
