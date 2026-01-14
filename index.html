@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
     <!-- SVG Icons Sprite -->
@@ -105,6 +106,10 @@
                 <a href="use-cases.html" class="nav-link">Use Cases</a>
                 <a href="#privacy" class="nav-link">Privacy</a>
                 <a href="#footer" class="nav-link">Contact</a>
+                <a href="login.html" class="nav-link auth-link">Login</a>
+                <a href="signup.html" class="nav-link auth-link">Sign Up</a>
+                <a href="dashboard.html" class="nav-link user-link" style="display: none;">Dashboard</a>
+                <a href="#" id="logoutBtn" class="nav-link user-link" style="display: none;">Logout</a>
             </div>
         </div>
     </nav>
@@ -333,7 +338,20 @@
         </div>
     </footer>
 
+    <script src="auth.js"></script>
     <script src="script.js"></script>
+    <script>
+        // Logout handler for home page
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    await signOut();
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 
